@@ -1,0 +1,19 @@
+# TODO
+- Documentation
+  - [ ] Add functional spec under doc
+  - [ ] Add design spec under doc
+  - [ ] Add final presentation under doc
+  - [ ] Flush out README.md
+- Examples
+  - [ ] Implement basic example
+  - [ ] Implement solver example
+  - [ ] Implement interactive example
+- Tests
+  - [ ] Tests for Game
+  - [ ] Tests for Wordle
+- Implementation
+  - [ ] Fill in public API
+  - [ ] Add doc comments
+  - [ ] Implement Game
+  - [ ] Implement Wordle
+  - [ ] Verify style and formatting
