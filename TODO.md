@@ -1,6 +1,6 @@
 # TODO
 - Documentation
-  - [ ] Add functional spec under doc
+  - [x] Add functional spec under doc
   - [ ] Add design spec under doc
   - [ ] Add final presentation under doc
   - [ ] Flush out README.md
