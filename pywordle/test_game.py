@@ -16,6 +16,15 @@ class TestGame(unittest.TestCase):
         self.assertDictEqual(game._correct_letters, {"i": [2]})
         self.assertDictEqual(game._moved_letters, {"t": ([3], 1)})
 
+    def test_guess_handles_casing(self):
+        game = Game("point", False)
+
+        game.guess("SliTs")
+
+        self.assertSetEqual(game._absent_letters, {"s", "l"})
+        self.assertDictEqual(game._correct_letters, {"i": [2]})
+        self.assertDictEqual(game._moved_letters, {"t": ([3], 1)})
+
     def test_guess_hard_mode_exception(self):
         game = Game("point", True)
         game._correct_letters["o"] = [1]
