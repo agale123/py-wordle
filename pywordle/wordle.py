@@ -1,6 +1,3 @@
-from words import VALID_WORDS
-
-
 class Wordle:
     """Represents a class of games with a set of possible solutions."""
 
@@ -11,7 +8,7 @@ class Wordle:
         """
         self.solutions = solutions
 
-    def start_game(hard_mode=False, solution=None):
+    def start_game(self, hard_mode=False, solution=None):
         """
         Args:
             hard_mode: True if previous known letters must be used.
@@ -22,22 +19,5 @@ class Wordle:
         """
         pass
 
-    def get_valid_guesses(game):
-        """
-        Args:
-            game: To check for valid guesses
-
-        Returns:
-            List of valid guesses for the game.
-        """
-        pass
-
-    def get_possible_solutions(game):
-        """
-        Args:
-            game: To check for valid guesses
-
-        Returns:
-            The subset of solutions are are still valid.
-        """
+    def __repr__(self):
         pass

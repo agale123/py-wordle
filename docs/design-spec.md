@@ -34,9 +34,6 @@ creating games which is helpful for playing an interactive game as well as
 methods for calculating valid solutions or guesses which might be helpful
 when developing a solver.
 
-Data
-* `valid_words`: a list of all valid 5-letter words
-
 Inputs:
 * `solutions`: a list of 5-character strings
 
@@ -44,10 +41,6 @@ Methods:
 * `start_game(hard_mode=False, solution=None)`: picks a random word from
   `solutions` if a solution isn't provided and returns a `Game`
   instance
-* `get_valid_guesses(game)`: returns a list of the entries from `valid_words`
-  that are valid solutions given the current game state
-* `get_possible_solutions(game)`: returns a list of the entries from
-  `solutions` that are valid solutions given the current game state
 
 ### Game
 
@@ -58,6 +51,9 @@ just the most recent guess, but it is typically easiest to visualize all
 previous guesses at once and this logic will be carefully printed in the string
 representation of the class.
 
+Data
+* `valid_words`: a list of all valid 5-letter words
+
 Inputs:
 * `solution`: the final word
 * `hard_mode`: whether hard mode is enabled
@@ -67,6 +63,8 @@ Methods:
   guess. Throws an error if the guess is invalid
 * `is_valid(word)`: returns whether this is a valid guess given the game state
 * `get_game_status()`: returns whether the game is won, lost or in progress
+* `get_valid_guesses()`: returns a list of the entries from `valid_words`
+  that are valid solutions given the current game state
 * `__str__()`: pretty prints the game board which includes all the guessed
   letters and colors representing if they were correct
 
