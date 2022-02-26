@@ -9,11 +9,11 @@
   - [ ] Implement solver example
   - [ ] Implement interactive example
 - Tests
-  - [ ] Tests for Game
-  - [ ] Tests for Wordle
+  - [x] Tests for Game
+  - [x] Tests for Wordle
 - Implementation
-  - [ ] Fill in public API
-  - [ ] Add doc comments
+  - [x] Fill in public API
+  - [x] Add doc comments
   - [ ] Implement Game
   - [ ] Implement Wordle
   - [ ] Verify style and formatting
