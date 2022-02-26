@@ -1,6 +1,6 @@
 import unittest
 
-from game import Game, Status
+from game import Game, Status, MovedLetter
 from termcolor import colored
 from words import VALID_WORDS
 
@@ -8,113 +8,131 @@ from words import VALID_WORDS
 class TestGame(unittest.TestCase):
 
     def test_guess(self):
-        game = Game("point", False)
+        game = Game("POINT", False)
 
-        game.guess("slits")
+        game.guess("SLITS")
 
-        self.assertSetEqual(game._absent_letters, {"s", "l"})
-        self.assertDictEqual(game._correct_letters, {"i": [2]})
-        self.assertDictEqual(game._moved_letters, {"t": ([3], 1)})
+        self.assertSetEqual(game._absent_letters, {"S", "L"})
+        self.assertDictEqual(game._correct_letters, {"I": {2}})
+        self.assertDictEqual(game._moved_letters, {"T": MovedLetter(1, 5, {3})})
 
     def test_guess_handles_casing(self):
-        game = Game("point", False)
+        game = Game("pOInt", False)
 
         game.guess("SliTs")
 
-        self.assertSetEqual(game._absent_letters, {"s", "l"})
-        self.assertDictEqual(game._correct_letters, {"i": [2]})
-        self.assertDictEqual(game._moved_letters, {"t": ([3], 1)})
+        self.assertSetEqual(game._absent_letters, {"S", "L"})
+        self.assertDictEqual(game._correct_letters, {"I": {2}})
+        self.assertDictEqual(game._moved_letters, {"T": MovedLetter(1, 5, {3})})
+
+    def test_guess_duplicate_letters_guess(self):
+        game = Game("POINT", False)
+
+        game.guess("HAPPY")
+
+        self.assertSetEqual(game._absent_letters, {"H", "A", "Y"})
+        self.assertDictEqual(game._correct_letters, {})
+        self.assertDictEqual(game._moved_letters, {"P": MovedLetter(1, 1, {2, 3})})
+
+    def test_guess_duplicate_letters_answer(self):
+        game = Game("HAPPY", False)
+
+        game.guess("POINT")
+
+        self.assertSetEqual(game._absent_letters, {"O", "I", "N", "T"})
+        self.assertDictEqual(game._correct_letters, {})
+        self.assertDictEqual(game._moved_letters, {"P": MovedLetter(1, 5, {0})})
 
     def test_guess_hard_mode_exception(self):
-        game = Game("point", True)
+        game = Game("POINT", True)
         game._correct_letters["o"] = [1]
 
-        self.assertRaises(Exception, game.guess, "treat")
+        self.assertRaises(Exception, game.guess, "TREAT")
 
     def test_guess_invalid_word(self):
-        game = Game("foist", False)
+        game = Game("FOIST", False)
 
-        self.assertRaises(Exception, game.guess, "aaaaa")
+        self.assertRaises(Exception, game.guess, "AAAAA")
 
     def test_guess_wrong_length(self):
-        game = Game("spill", False)
+        game = Game("SPILL", False)
 
-        self.assertRaises(Exception, game.guess, "cat")
+        self.assertRaises(Exception, game.guess, "CAT")
 
     def test_guess_game_already_won(self):
-        game = Game("spill", False)
+        game = Game("SPILL", False)
 
-        game.guess("spill")
+        game.guess("SPILL")
 
-        self.assertRaises(Exception, game.guess, "treat")
+        self.assertRaises(Exception, game.guess, "TREAT")
 
     def test_is_valid(self):
-        game = Game("cause", False)
-        game._absent_letters = {"i", "l", "n"}
-        game._correct_letters = {"a": [1]}
-        game._moved_letters = {"a": ([0], 1), "s": ([1, 4], 1)}
+        game = Game("CAUSE", False)
+        game._absent_letters = {"I", "L", "N"}
+        game._correct_letters = {"A": {1}}
+        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
-        self.assertTrue(game.is_valid("spill"))
-        self.assertFalse(game.is_valid("aaaaa"))
+        self.assertTrue(game.is_valid("SPILL"))
+        self.assertFalse(game.is_valid("AAAAA"))
 
     def test_is_valid_hard_mode(self):
-        game = Game("cause", True)
-        game._absent_letters = {"i", "l", "n"}
-        game._correct_letters = {"a": [1]}
-        game._moved_letters = {"a": ([0], 1), "s": ([1, 4], 1)}
+        game = Game("CAUSE", True)
+        game._absent_letters = {"I", "L", "N"}
+        game._correct_letters = {"A": {1}}
+        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
-        self.assertTrue(game.is_valid("taper"))
-        self.assertTrue(game.is_valid("cause"))
-        self.assertFalse(game.is_valid("treat"))
-        self.assertFalse(game.is_valid("spill"))
-        self.assertFalse(game.is_valid("aaaaa"))
+        self.assertTrue(game.is_valid("TAPER"))
+        self.assertTrue(game.is_valid("CAUSE"))
+        self.assertFalse(game.is_valid("TREAT"))
+        self.assertFalse(game.is_valid("SPILL"))
+        self.assertFalse(game.is_valid("AAAAA"))
 
     def test_get_game_status_won(self):
-        game = Game("cause", False)
+        game = Game("CAUSE", False)
 
-        game.guess("cause")
+        game.guess("CAUSE")
 
         self.assertEqual(game.get_game_status(), Status.WON)
 
     def test_get_game_status_lost(self):
-        game = Game("cause", False)
+        game = Game("CAUSE", False)
 
         for x in range(6):
-            game.guess("treat")
+            game.guess("TREAT")
 
         self.assertEqual(game.get_game_status(), Status.LOST)
 
     def test_get_game_status_in_progress(self):
-        game = Game("cause", False)
+        game = Game("CAUSE", False)
 
-        game.guess("treat")
+        game.guess("TREAT")
 
         self.assertEqual(game.get_game_status(), Status.IN_PROGRESS)
 
     def test_get_valid_guesses(self):
-        game = Game("cause", False)
-        game._absent_letters = {"i", "l", "n"}
-        game._correct_letters = {"a": [1]}
-        game._moved_letters = {"a": ([0], 1), "s": ([1, 4], 1)}
+        game = Game("CAUSE", False)
+        game._absent_letters = {"I", "L", "N"}
+        game._correct_letters = {"A": {1}}
+        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
         self.assertListEqual(game.get_valid_guesses(), VALID_WORDS)
 
     def test_get_valid_guesses_hard_mode(self):
-        game = Game("cause", True)
-        game._absent_letters = {"i", "l", "n"}
-        game._correct_letters = {"a": [1]}
-        game._moved_letters = {"a": ([0], 1), "s": ([1, 4], 1)}
+        game = Game("CAUSE", True)
+        game._absent_letters = {"I", "L", "N"}
+        game._correct_letters = {"A": {1}}
+        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
         self.assertListEqual(
             game.get_valid_guesses().sort(),
-            ["cause", "pause"].sort())
+            ["CAUSE", "PAUSE"].sort())
 
     def test_str(self):
-        game = Game("spill", False)
+        game = Game("SPILL", False)
 
-        game.guess("foils")
-        game.guess("swirl")
-        game.guess("spill")
+        game.guess("FOILS")
+        game.guess("SWIRL")
+        game.guess("SPILL")
 
         expected = "\n".join([
             (
@@ -143,9 +161,9 @@ class TestGame(unittest.TestCase):
         self.assertEqual(str(game), expected)
 
     def test_repr(self):
-        game = Game("boast", True)
+        game = Game("BOAST", True)
 
-        self.assertEqual(repr(game), "Game(\"boast\", True)")
+        self.assertEqual(repr(game), "Game(\"BOAST\", True)")
 
 
 if __name__ == '__main__':

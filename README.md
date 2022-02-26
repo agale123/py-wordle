@@ -16,15 +16,6 @@ py-wordle
 ├── LICENSE
 ├── README.md
 ├── TODO.md
-├── build
-│   └── lib
-│       └── pywordle
-│           ├── __init__.py
-│           ├── game.py
-│           ├── test_game.py
-│           ├── test_wordle.py
-│           ├── wordle.py
-│           └── words.py
 ├── docs
 │   ├── design-spec.md
 │   └── functional-spec.md
