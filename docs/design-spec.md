@@ -38,15 +38,16 @@ Data
 * `valid_words`: a list of all valid 5-letter words
 
 Inputs:
-* `possible_solutions`: a list of 5-character strings
+* `solutions`: a list of 5-character strings
 
 Methods:
-* `start_game(hard_mode=False)`: picks a random word from `possible_solutions`
-  and returns a `Game` instance
+* `start_game(hard_mode=False, solution=None)`: picks a random word from
+  `solutions` if a solution isn't provided and returns a `Game`
+  instance
 * `get_valid_guesses(game)`: returns a list of the entries from `valid_words`
   that are valid solutions given the current game state
 * `get_possible_solutions(game)`: returns a list of the entries from
-  `possible_solutions` that are valid solutions given the current game state
+  `solutions` that are valid solutions given the current game state
 
 ### Game
 
@@ -59,12 +60,11 @@ representation of the class.
 
 Inputs:
 * `solution`: the final word
-* `valid_words`: the list of valid words
 * `hard_mode`: whether hard mode is enabled
 
 Methods:
 * `guess(word)`: updates the game state to reflect the results of making the
-  guess. Throws an error if the guess is invalid. Returns self
+  guess. Throws an error if the guess is invalid
 * `is_valid(word)`: returns whether this is a valid guess given the game state
 * `get_game_status()`: returns whether the game is won, lost or in progress
 * `__str__()`: pretty prints the game board which includes all the guessed

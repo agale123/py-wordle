@@ -1,13 +1,13 @@
 import unittest
 
-from pywordle import Wordle
+from wordle import Wordle
 
 
 class TestWordle(unittest.TestCase):
 
     def test_value(self):
-        wordle = Wordle()
-        self.assertTrue(wordle.value)
+        wordle = Wordle(["foo", "bar", "baz"])
+        self.assertListEqual(wordle.solutions, ["foo", "bar", "baz"])
 
 
 if __name__ == '__main__':
