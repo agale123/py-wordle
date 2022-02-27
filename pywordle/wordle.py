@@ -1,3 +1,7 @@
+import random
+from game import Game, WORD_LEN
+
+
 class Wordle:
     """Represents a class of games with a set of possible solutions."""
 
@@ -6,7 +10,10 @@ class Wordle:
         Args:
             solutions: List of possible solutions
         """
-        self.solutions = solutions
+        if not all(len(s) == WORD_LEN for s in solutions):
+            raise Exception("Solutions are the wrong length")
+
+        self.solutions = list(map(lambda x: x.upper(), solutions))
 
     def start_game(self, hard_mode=False, solution=None):
         """
@@ -17,7 +24,12 @@ class Wordle:
         Returns:
             A Game instance.
         """
-        pass
+        if not solution:
+            solution = random.choice(self.solutions)
+        elif solution not in self.solutions:
+            raise Exception("Solution isn't a valid word")
+
+        return Game(solution, hard_mode)
 
     def __repr__(self):
-        pass
+        return "Wordle({0})".format(self.solutions)
