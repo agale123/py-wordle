@@ -35,8 +35,6 @@ set of words might be following a specific theme.
    1. User creates game instances to represent all possible solutions
    2. User tests different guesses
    3. Program responds with feedback on which letters are correct
-   4. User queries how many possible words remain based on the feedback and
-   uses that to "score" each possible guess
 3. Word game enthusiat wants to play unlimited Wordle
    1. User passes in the list of possible solutions from the official Wordle
    2. User creates a game

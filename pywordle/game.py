@@ -139,53 +139,6 @@ class Game:
         """
         return self._status
 
-    def _is_possible(self, word):
-        """
-        Returns:
-            Whether the word can possibly be a solution given the state. This
-            is more strict than is_valid which takes into account exact match
-            letters while in hard mode.
-        """
-        word = word.upper()
-
-        # Check if word is in the list of valid words
-        if word not in VALID_WORDS:
-            return False
-
-        # Check if word contains an absent letter
-        for letter in self._absent_letters:
-            if letter in word:
-                return False
-
-        # Check if word contains all correct letters
-        for letter, indices in self._correct_letters.items():
-            for i in indices:
-                if word[i] != letter:
-                    return False
-
-        # Check if word matches
-        for letter, details in self._moved_letters.items():
-            letter_count = self._solution.count(letter)
-            if letter_count < details.min_count or letter_count > details.max_count:
-                return False
-            for i in details.indices:
-                if word[i] == letter:
-                    return False
-
-        return True
-
-    def get_possible_solutions(self):
-        """
-        Returns:
-            List of possible solutions given all information from the state.
-        """
-
-        # Cache the list of valid words, knowing that as the game progresses,
-        # words can only be removed from the list
-        self._possible_solutions = list(
-            filter(lambda x: self._is_possible(x), self._possible_solutions))
-        return self._possible_solutions
-
     def __str__(self):
         words = []
         for guess in self._guesses:

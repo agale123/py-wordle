@@ -125,13 +125,6 @@ class TestGame(unittest.TestCase):
 
         self.assertEqual(game.get_status(), Status.IN_PROGRESS)
 
-    def test_get_possible_solutions(self):
-        game = Game("CAUSE", True)
-        game._absent_letters = {"I", "L", "N", "G", "Y", "M", "F", "R"}
-        game._correct_letters = {"A": {1}, "U": {2}, "S": {3}}
-        game._moved_letters = {"A": MovedLetter(
-            1, 5, {0, 4}), "S": MovedLetter(1, 5, {1, 4})}
-
         self.assertSetEqual(
             set(game.get_possible_solutions()),
             set(["CAUSE", "PAUSE", "HAUSE"]))

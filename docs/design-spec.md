@@ -63,8 +63,6 @@ Methods:
   guess. Throws an error if the guess is invalid
 * `is_valid(word)`: returns whether this is a valid guess given the game state
 * `get_status()`: returns whether the game is won, lost or in progress
-* `get_possible_solutions()`: returns a list of the entries from `valid_words`
-  that are valid solutions given the current game state
 * `__str__()`: pretty prints the game board which includes all the guessed
   letters and colors representing if they were correct
 

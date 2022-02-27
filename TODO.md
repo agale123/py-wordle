@@ -6,7 +6,7 @@
   - [ ] Add final writeup
   - [x] Flush out README.md
 - Examples
-  - [ ] Implement solver example
+  - [ ] Implement simple example
   - [x] Implement interactive example
 - Tests
   - [x] Tests for Game
