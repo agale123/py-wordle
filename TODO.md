@@ -6,7 +6,7 @@
   - [ ] Add final writeup
   - [x] Flush out README.md
 - Examples
-  - [ ] Implement simple example
+  - [x] Implement simple example
   - [x] Implement interactive example
 - Tests
   - [x] Tests for Game
@@ -16,4 +16,4 @@
   - [x] Add doc comments
   - [x] Implement Game
   - [x] Implement Wordle
-  - [ ] Verify style and formatting
+  - [x] Verify style and formatting

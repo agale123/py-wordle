@@ -1,7 +1,8 @@
 import unittest
 
-from game import Game, Status, MovedLetter
 from termcolor import colored
+
+from game import Game, Status, MovedLetter
 from words import VALID_WORDS
 
 

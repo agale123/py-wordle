@@ -1,6 +1,6 @@
 from pywordle import Wordle, Game, Status
 
-animals = [
+ANIMALS = [
     "zebra",
     "whale",
     "bison",
@@ -11,7 +11,7 @@ animals = [
     "llama",
 ]
 
-wordle = Wordle(animals)
+wordle = Wordle(ANIMALS)
 game = wordle.start_game()
 
 game.guess("hippo")

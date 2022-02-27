@@ -1,6 +1,7 @@
 from collections import defaultdict
 from enum import Enum
 from termcolor import colored
+
 from pywordle.words import VALID_WORDS
 
 MAX_GUESSES = 6
@@ -151,7 +152,13 @@ class Game:
                 elif letter in self._solution:
                     # For inexact matches, we need to color at most the number
                     # of instances in the solution with priority given to exact
-                    # matches.
+                    # matches. Steps to calculate this:
+                    # 1. See if we guessed more instances of a letter than the
+                    #    solution has.
+                    # 2. Find if any of those guesses were an exact match and
+                    #    subtract that out from the count of letters to color.
+                    # 3. Start from the beginning of the word to color the
+                    #    right number of inexact matches.
                     actual_count = self._solution.count(letter)
                     guessed_extra_letters = actual_count < guess.count(letter)
                     solution_indices = {i for i, c in enumerate(

@@ -1,4 +1,5 @@
 import random
+
 from pywordle.game import Game, WORD_LEN
 
 
