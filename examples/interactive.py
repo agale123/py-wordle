@@ -5,7 +5,7 @@ from pywordle import Wordle, Game, Status
 wordle = Wordle(SOLUTIONS)
 game = wordle.start_game(True)
 
-while game.get_game_status() == Status.IN_PROGRESS:
+while game.get_status() == Status.IN_PROGRESS:
     guess = input("Enter your guess: ")
     if game.is_valid(guess):
         game.guess(guess)
@@ -13,7 +13,7 @@ while game.get_game_status() == Status.IN_PROGRESS:
     else:
         print("Guess is invalid")
 
-if game.get_game_status() == Status.WON:
+if game.get_status() == Status.WON:
     print("Congrats! You won")
 else:
-    print("Sorry, you lost")
+    print("Sorry, you lost. Solution was: " + game.solution)

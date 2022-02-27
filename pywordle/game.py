@@ -1,8 +1,7 @@
 from collections import defaultdict
-from email.policy import default
 from enum import Enum
 from termcolor import colored
-from words import VALID_WORDS
+from pywordle.words import VALID_WORDS
 
 MAX_GUESSES = 6
 WORD_LEN = 5

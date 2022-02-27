@@ -3,7 +3,7 @@
   - [x] Add functional spec under doc
   - [x] Add design spec under doc
   - [ ] Add final presentation under doc
-  - [ ] Flush out README.md
+  - [x] Flush out README.md
 - Examples
   - [ ] Implement basic example
   - [ ] Implement solver example
@@ -14,6 +14,6 @@
 - Implementation
   - [x] Fill in public API
   - [x] Add doc comments
-  - [ ] Implement Game
-  - [ ] Implement Wordle
+  - [x] Implement Game
+  - [x] Implement Wordle
   - [ ] Verify style and formatting

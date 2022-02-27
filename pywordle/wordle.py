@@ -1,5 +1,5 @@
 import random
-from game import Game, WORD_LEN
+from pywordle.game import Game, WORD_LEN
 
 
 class Wordle:
