@@ -1,13 +1,13 @@
 # TODO
 - Documentation
-  - [x] Add functional spec under doc
-  - [x] Add design spec under doc
-  - [ ] Add final presentation under doc
+  - [x] Add functional spec
+  - [x] Add design spec
+  - [ ] Add final presentation
+  - [ ] Add final writeup
   - [x] Flush out README.md
 - Examples
-  - [ ] Implement basic example
   - [ ] Implement solver example
-  - [ ] Implement interactive example
+  - [x] Implement interactive example
 - Tests
   - [x] Tests for Game
   - [x] Tests for Wordle

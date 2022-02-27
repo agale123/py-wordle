@@ -44,8 +44,8 @@ class Game:
             solution: The answer for the game.
             hard_mode: True if previous known letters must be used.
         """
-        self.solution = solution.upper()
-        self.hard_mode = hard_mode
+        self._solution = solution.upper()
+        self._hard_mode = hard_mode
 
         # Set of guessed letters not in the solution.
         self._absent_letters = set()
@@ -58,9 +58,9 @@ class Game:
         self._moved_letters = defaultdict(
             lambda: MovedLetter(0, WORD_LEN, set()))
 
-        self.status = Status.IN_PROGRESS
-        self.guesses = []
-        self.possible_solutions = VALID_WORDS
+        self._status = Status.IN_PROGRESS
+        self._guesses = []
+        self._possible_solutions = VALID_WORDS
 
     def guess(self, word):
         """
@@ -77,19 +77,19 @@ class Game:
         if not self.is_valid(word):
             raise Exception("Invalid guess")
 
-        if not self.status == Status.IN_PROGRESS:
+        if not self._status == Status.IN_PROGRESS:
             raise Exception("Game is already over")
 
         # Update the game state
         for i in range(WORD_LEN):
-            if self.solution[i] == word[i]:
+            if self._solution[i] == word[i]:
                 self._correct_letters[word[i]].add(i)
-            elif word[i] in self.solution:
+            elif word[i] in self._solution:
                 self._moved_letters[word[i]].add(i)
                 # If we learn the maximum number of times a letter appears
                 # then update the max_count
-                if word.count(word[i]) > self.solution.count(word[i]):
-                    self._moved_letters[word[i]].max_count = self.solution.count(
+                if word.count(word[i]) > self._solution.count(word[i]):
+                    self._moved_letters[word[i]].max_count = self._solution.count(
                         word[i])
 
                 # If we learn the minimum number of times a letter appears
@@ -98,16 +98,16 @@ class Game:
                     self._moved_letters[word[i]].min_count,
                     min(
                         word.count(word[i]),
-                        self.solution.count(word[i])))
+                        self._solution.count(word[i])))
             else:
                 self._absent_letters.add(word[i])
 
         # Check if the game is over
-        self.guesses.append(word)
-        if self.solution == word:
-            self.status = Status.WON
-        elif len(self.guesses) == MAX_GUESSES:
-            self.status = Status.LOST
+        self._guesses.append(word)
+        if self._solution == word:
+            self._status = Status.WON
+        elif len(self._guesses) == MAX_GUESSES:
+            self._status = Status.LOST
 
     def is_valid(self, word):
         """
@@ -124,7 +124,7 @@ class Game:
             return False
 
         # For hard mode check if correct letters are included
-        if self.hard_mode:
+        if self._hard_mode:
             for letter, indices in self._correct_letters.items():
                 for i in indices:
                     if word[i] != letter:
@@ -137,7 +137,7 @@ class Game:
         Returns:
             Whether the game is won, lost, or in progress.
         """
-        return self.status
+        return self._status
 
     def _is_possible(self, word):
         """
@@ -165,7 +165,7 @@ class Game:
 
         # Check if word matches
         for letter, details in self._moved_letters.items():
-            letter_count = self.solution.count(letter)
+            letter_count = self._solution.count(letter)
             if letter_count < details.min_count or letter_count > details.max_count:
                 return False
             for i in details.indices:
@@ -182,27 +182,27 @@ class Game:
 
         # Cache the list of valid words, knowing that as the game progresses,
         # words can only be removed from the list
-        self.possible_solutions = list(
-            filter(lambda x: self._is_possible(x), self.possible_solutions))
-        return self.possible_solutions
+        self._possible_solutions = list(
+            filter(lambda x: self._is_possible(x), self._possible_solutions))
+        return self._possible_solutions
 
     def __str__(self):
         words = []
-        for guess in self.guesses:
+        for guess in self._guesses:
             word = ""
             for i in range(WORD_LEN):
                 letter = guess[i]
-                if self.solution[i] == letter:
+                if self._solution[i] == letter:
                     # Exact match has a green background
                     word += colored(letter, "grey", "on_green")
-                elif letter in self.solution:
+                elif letter in self._solution:
                     # For inexact matches, we need to color at most the number
                     # of instances in the solution with priority given to exact
                     # matches.
-                    actual_count = self.solution.count(letter)
+                    actual_count = self._solution.count(letter)
                     guessed_extra_letters = actual_count < guess.count(letter)
                     solution_indices = {i for i, c in enumerate(
-                        self.solution) if c == letter}
+                        self._solution) if c == letter}
                     guess_indices = {
                         i for i, c in enumerate(guess) if c == letter}
                     exact_match_count = len(
@@ -223,4 +223,4 @@ class Game:
         return "\n".join(words)
 
     def __repr__(self):
-        return "Game(\"{0}\", {1})".format(self.solution, self.hard_mode)
+        return "Game(\"{0}\", {1})".format(self._solution, self._hard_mode)
