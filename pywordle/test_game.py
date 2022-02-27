@@ -14,7 +14,8 @@ class TestGame(unittest.TestCase):
 
         self.assertSetEqual(game._absent_letters, {"S", "L"})
         self.assertDictEqual(game._correct_letters, {"I": {2}})
-        self.assertDictEqual(game._moved_letters, {"T": MovedLetter(1, 5, {3})})
+        self.assertDictEqual(game._moved_letters, {
+                             "T": MovedLetter(1, 5, {3})})
 
     def test_guess_handles_casing(self):
         game = Game("pOInt", False)
@@ -23,7 +24,8 @@ class TestGame(unittest.TestCase):
 
         self.assertSetEqual(game._absent_letters, {"S", "L"})
         self.assertDictEqual(game._correct_letters, {"I": {2}})
-        self.assertDictEqual(game._moved_letters, {"T": MovedLetter(1, 5, {3})})
+        self.assertDictEqual(game._moved_letters, {
+                             "T": MovedLetter(1, 5, {3})})
 
     def test_guess_duplicate_letters(self):
         game = Game("SLITS", False)
@@ -32,7 +34,8 @@ class TestGame(unittest.TestCase):
 
         self.assertSetEqual(game._absent_letters, {"B", "O", "Y"})
         self.assertDictEqual(game._correct_letters, {})
-        self.assertDictEqual(game._moved_letters, {"S": MovedLetter(2, 5, {2, 3})})
+        self.assertDictEqual(game._moved_letters, {
+                             "S": MovedLetter(2, 5, {2, 3})})
 
     def test_guess_duplicate_letters_guess(self):
         game = Game("POINT", False)
@@ -41,7 +44,8 @@ class TestGame(unittest.TestCase):
 
         self.assertSetEqual(game._absent_letters, {"H", "A", "Y"})
         self.assertDictEqual(game._correct_letters, {})
-        self.assertDictEqual(game._moved_letters, {"P": MovedLetter(1, 1, {2, 3})})
+        self.assertDictEqual(game._moved_letters, {
+                             "P": MovedLetter(1, 1, {2, 3})})
 
     def test_guess_duplicate_letters_answer(self):
         game = Game("HAPPY", False)
@@ -50,7 +54,8 @@ class TestGame(unittest.TestCase):
 
         self.assertSetEqual(game._absent_letters, {"O", "I", "N", "T"})
         self.assertDictEqual(game._correct_letters, {})
-        self.assertDictEqual(game._moved_letters, {"P": MovedLetter(1, 5, {0})})
+        self.assertDictEqual(game._moved_letters, {
+                             "P": MovedLetter(1, 5, {0})})
 
     def test_guess_hard_mode_exception(self):
         game = Game("POINT", True)
@@ -79,7 +84,8 @@ class TestGame(unittest.TestCase):
         game = Game("CAUSE", False)
         game._absent_letters = {"I", "L", "N"}
         game._correct_letters = {"A": {1}}
-        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
+        game._moved_letters = {"A": MovedLetter(
+            1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
         self.assertTrue(game.is_valid("SPILL"))
         self.assertFalse(game.is_valid("AAAAA"))
@@ -88,7 +94,8 @@ class TestGame(unittest.TestCase):
         game = Game("CAUSE", True)
         game._absent_letters = {"I", "L", "N"}
         game._correct_letters = {"A": {1}}
-        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
+        game._moved_letters = {"A": MovedLetter(
+            1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
         self.assertTrue(game.is_valid("TAPER"))
         self.assertTrue(game.is_valid("CAUSE"))
@@ -96,45 +103,38 @@ class TestGame(unittest.TestCase):
         self.assertFalse(game.is_valid("SPILL"))
         self.assertFalse(game.is_valid("AAAAA"))
 
-    def test_get_game_status_won(self):
+    def test_get_status_won(self):
         game = Game("CAUSE", False)
 
         game.guess("CAUSE")
 
-        self.assertEqual(game.get_game_status(), Status.WON)
+        self.assertEqual(game.get_status(), Status.WON)
 
-    def test_get_game_status_lost(self):
+    def test_get_status_lost(self):
         game = Game("CAUSE", False)
 
         for x in range(6):
             game.guess("TREAT")
 
-        self.assertEqual(game.get_game_status(), Status.LOST)
+        self.assertEqual(game.get_status(), Status.LOST)
 
-    def test_get_game_status_in_progress(self):
+    def test_get_status_in_progress(self):
         game = Game("CAUSE", False)
 
         game.guess("TREAT")
 
-        self.assertEqual(game.get_game_status(), Status.IN_PROGRESS)
+        self.assertEqual(game.get_status(), Status.IN_PROGRESS)
 
-    def test_get_valid_guesses(self):
-        game = Game("CAUSE", False)
-        game._absent_letters = {"I", "L", "N"}
-        game._correct_letters = {"A": {1}}
-        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
-
-        self.assertListEqual(game.get_valid_guesses(), VALID_WORDS)
-
-    def test_get_valid_guesses_hard_mode(self):
+    def test_get_possible_solutions(self):
         game = Game("CAUSE", True)
         game._absent_letters = {"I", "L", "N", "G", "Y", "M", "F", "R"}
         game._correct_letters = {"A": {1}, "U": {2}, "S": {3}}
-        game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
+        game._moved_letters = {"A": MovedLetter(
+            1, 5, {0, 4}), "S": MovedLetter(1, 5, {1, 4})}
 
         self.assertSetEqual(
-            set(game.get_valid_guesses()),
-            set(["CAUSA", "GAUSS","CAUSE", "PAUSE", "MAUSY", "HAUSE"]))
+            set(game.get_possible_solutions()),
+            set(["CAUSE", "PAUSE", "HAUSE"]))
 
     def test_str(self):
         game = Game("SPILL", False)
@@ -175,7 +175,7 @@ class TestGame(unittest.TestCase):
             ),
         ])
 
-        self.maxDiff =None
+        self.maxDiff = None
         self.assertEqual(str(game), expected)
 
     def test_repr(self):
