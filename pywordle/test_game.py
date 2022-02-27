@@ -25,6 +25,15 @@ class TestGame(unittest.TestCase):
         self.assertDictEqual(game._correct_letters, {"I": {2}})
         self.assertDictEqual(game._moved_letters, {"T": MovedLetter(1, 5, {3})})
 
+    def test_guess_duplicate_letters(self):
+        game = Game("SLITS", False)
+
+        game.guess("BOSSY")
+
+        self.assertSetEqual(game._absent_letters, {"B", "O", "Y"})
+        self.assertDictEqual(game._correct_letters, {})
+        self.assertDictEqual(game._moved_letters, {"S": MovedLetter(2, 5, {2, 3})})
+
     def test_guess_duplicate_letters_guess(self):
         game = Game("POINT", False)
 
@@ -119,19 +128,20 @@ class TestGame(unittest.TestCase):
 
     def test_get_valid_guesses_hard_mode(self):
         game = Game("CAUSE", True)
-        game._absent_letters = {"I", "L", "N"}
-        game._correct_letters = {"A": {1}}
+        game._absent_letters = {"I", "L", "N", "G", "Y", "M", "F", "R"}
+        game._correct_letters = {"A": {1}, "U": {2}, "S": {3}}
         game._moved_letters = {"A": MovedLetter(1, 5, {0}), "S": MovedLetter(1, 5, {1, 4})}
 
-        self.assertListEqual(
-            game.get_valid_guesses().sort(),
-            ["CAUSE", "PAUSE"].sort())
+        self.assertSetEqual(
+            set(game.get_valid_guesses()),
+            set(["CAUSA", "GAUSS","CAUSE", "PAUSE", "MAUSY", "HAUSE"]))
 
     def test_str(self):
         game = Game("SPILL", False)
 
         game.guess("FOILS")
         game.guess("SWIRL")
+        game.guess("IDIOM")
         game.guess("SPILL")
 
         expected = "\n".join([
@@ -150,6 +160,13 @@ class TestGame(unittest.TestCase):
                 colored("L", "grey", "on_green")
             ),
             (
+                colored("I", "grey", "on_white") +
+                colored("D", "grey", "on_white") +
+                colored("I", "grey", "on_green") +
+                colored("O", "grey", "on_white") +
+                colored("M", "grey", "on_white")
+            ),
+            (
                 colored("S", "grey", "on_green") +
                 colored("P", "grey", "on_green") +
                 colored("I", "grey", "on_green") +
@@ -158,6 +175,7 @@ class TestGame(unittest.TestCase):
             ),
         ])
 
+        self.maxDiff =None
         self.assertEqual(str(game), expected)
 
     def test_repr(self):

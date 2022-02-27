@@ -1,9 +1,11 @@
 from collections import defaultdict
 from email.policy import default
-from words import VALID_WORDS
 from enum import Enum
+from termcolor import colored
+from words import VALID_WORDS
 
 MAX_GUESSES = 6
+WORD_LEN = 5
 
 
 class Status(Enum):
@@ -15,16 +17,13 @@ class Status(Enum):
 class MovedLetter:
     """Metadata about a letter that is correct but in the wrong location."""
 
-    def __init__(self, min_count=0, max_count=5, indicies=set()):
+    def __init__(self, min_count=0, max_count=WORD_LEN, indicies=set()):
         self.min_count = min_count
         self.max_count = max_count
         self.indices = indicies
 
     def add(self, index):
-        # TODO(agale): Make this more robust
-        if index not in self.indices:
-            self.indices.add(index)
-            self.min_count += 1
+        self.indices.add(index)
 
     def __eq__(self, other):
         return (
@@ -57,10 +56,11 @@ class Game:
 
         # Map from guessed letters to an object containing a set of indices
         # where the letter isn't and the minimum number of instances.
-        self._moved_letters = defaultdict(lambda: MovedLetter(0, 5, set()))
+        self._moved_letters = defaultdict(lambda: MovedLetter(0, WORD_LEN, set()))
 
         self.status = Status.IN_PROGRESS
         self.guesses = []
+        self.valid_words = VALID_WORDS
 
     def guess(self, word):
         """
@@ -81,12 +81,24 @@ class Game:
             raise Exception("Game is already over")
 
         # Update the game state
-        for i in range(5):
+        for i in range(WORD_LEN):
             if self.solution[i] == word[i]:
                 self._correct_letters[word[i]].add(i)
             elif word[i] in self.solution:
-                # TODO(agale): Handle multiple letters better
                 self._moved_letters[word[i]].add(i)
+                # If we learn the maximum number of times a letter appears
+                # then update the max_count
+                if word.count(word[i]) > self.solution.count(word[i]):
+                    self._moved_letters[word[i]].max_count = self.solution.count(
+                        word[i])
+
+                # If we learn the minimum number of times a letter appears
+                # then update the min_count
+                self._moved_letters[word[i]].min_count = max(
+                    self._moved_letters[word[i]].min_count,
+                    min(
+                        word.count(word[i]),
+                        self.solution.count(word[i])))
             else:
                 self._absent_letters.add(word[i])
 
@@ -111,7 +123,12 @@ class Game:
         if word not in VALID_WORDS:
             return False
 
-        # TODO(agale): Check if hard mode conditions are satisfied
+        # For hard mode check if correct letters are included
+        if self.hard_mode:
+            for letter,indices in self._correct_letters.items():
+                for i in indices:
+                    if word[i] != letter:
+                        return False
 
         return True
 
@@ -127,10 +144,28 @@ class Game:
         Returns:
             List of valid guesses for the game.
         """
-        pass
+
+        # Cache the list of valid words, knowing that as the game progresses,
+        # words can only be removed from the list
+        self.valid_words = list(filter(lambda x: self.is_valid(x), self.valid_words))
+        return self.valid_words
 
     def __str__(self):
-        return "\n".join(self.guesses)
+        words = []
+        for guess in self.guesses:
+            word = ""
+            for i in range(WORD_LEN):
+                letter = guess[i]
+                if self.solution[i] == letter:
+                    word += colored(letter, "grey", "on_green")
+                elif letter in self.solution:
+                    # TODO(agale): handle multiple letters case
+                    word += colored(letter, "grey", "on_yellow")
+                else:
+                    word += colored(letter, "grey", "on_white")
+            words.append(word)
+        return "\n".join(words)
+
 
     def __repr__(self):
         return "Game(\"{0}\", {1})".format(self.solution, self.hard_mode)
