@@ -126,10 +126,6 @@ class TestGame(unittest.TestCase):
 
         self.assertEqual(game.get_status(), Status.IN_PROGRESS)
 
-        self.assertSetEqual(
-            set(game.get_possible_solutions()),
-            set(["CAUSE", "PAUSE", "HAUSE"]))
-
     def test_str(self):
         game = Game("SPILL", False)
 
