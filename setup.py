@@ -6,4 +6,5 @@ setup(name='pywordle',
       packages=['pywordle'],
       install_requires=[
           "termcolor",
+          "enum",
       ],)
