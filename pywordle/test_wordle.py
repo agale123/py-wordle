@@ -14,14 +14,14 @@ class TestWordle(unittest.TestCase):
         wordle = Wordle(SOLUTIONS)
 
         game = wordle.start_game(False)
-        self.assertIn(game.solution, SOLUTIONS)
+        self.assertIn(game._solution, SOLUTIONS)
         self.assertFalse(game.hard_mode)
 
     def test_start_game_with_solution(self):
         wordle = Wordle(SOLUTIONS)
 
         game = wordle.start_game(False, "RAISE")
-        self.assertEqual(game.solution, "RAISE")
+        self.assertEqual(game._solution, "RAISE")
 
     def test_start_game_invalid_word(self):
         wordle = Wordle(SOLUTIONS)
