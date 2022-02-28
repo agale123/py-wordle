@@ -15,7 +15,7 @@ class TestWordle(unittest.TestCase):
 
         game = wordle.start_game(False)
         self.assertIn(game._solution, SOLUTIONS)
-        self.assertFalse(game.hard_mode)
+        self.assertFalse(game._hard_mode)
 
     def test_start_game_with_solution(self):
         wordle = Wordle(SOLUTIONS)
