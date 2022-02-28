@@ -11,6 +11,7 @@
 - Tests
   - [x] Tests for Game
   - [x] Tests for Wordle
+  - [x] Set up continuous integration in GitHub
 - Implementation
   - [x] Fill in public API
   - [x] Add doc comments
