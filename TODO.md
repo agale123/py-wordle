@@ -2,7 +2,7 @@
 - Documentation
   - [x] Add functional spec
   - [x] Add design spec
-  - [ ] Add final presentation
+  - [x] Add final presentation
   - [ ] Add final writeup
   - [x] Flush out README.md
 - Examples
