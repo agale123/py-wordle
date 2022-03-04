@@ -48,3 +48,8 @@ py-wordle
 │   └── words.py
 └── setup.py
 </pre>
+
+## Continuous integration
+
+GitHub Actions is set up to run all the unit tests anytime a commit is
+made to this project.
