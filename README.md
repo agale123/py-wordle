@@ -37,8 +37,8 @@ py-wordle
 │   └── functional-spec.md
 ├── examples
 │   ├── interactive.py
-│   ├── solutions.py
-│   └── solver.py
+│   ├── simple.py
+│   └── solutions.py
 ├── pywordle
 │   ├── __init__.py
 │   ├── game.py
