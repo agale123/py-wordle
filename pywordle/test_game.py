@@ -84,6 +84,16 @@ class TestGame(unittest.TestCase):
 
         self.assertEqual(game.get_status(), Status.IN_PROGRESS)
 
+    def test_plot_progress(self):
+        game = Game("SPILL", False)
+
+        game.guess("FOILS")
+        game.guess("SWIRL")
+        game.guess("IDIOM")
+        game.guess("SPILL")
+
+        self.assertListEqual(game.plot_progress(), [12972, 59, 4, 4, 1])
+
     def test_str(self):
         game = Game("SPILL", False)
 

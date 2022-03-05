@@ -1,5 +1,6 @@
 from collections import defaultdict
 from enum import Enum
+import matplotlib.pyplot as plt
 from termcolor import colored
 
 from pywordle.words import VALID_WORDS
@@ -12,7 +13,7 @@ class Status(Enum):
     IN_PROGRESS = 1
     WON = 2
     LOST = 3
-
+       
 
 class Game:
     """Represents an individual game of Wordle."""
@@ -31,6 +32,10 @@ class Game:
 
         self._status = Status.IN_PROGRESS
         self._guesses = []
+
+        # Keep track of how many words are left for plotting progress.
+        self.words_left = VALID_WORDS
+        self.progress = [len(self.words_left)]
 
     def guess(self, word):
         """
@@ -51,9 +56,36 @@ class Game:
             raise Exception("Game is already over")
 
         # Update the game state
+        absent_letters = set()
+        moved_letters = defaultdict(set)
         for i in range(WORD_LEN):
             if self._solution[i] == word[i]:
                 self._correct_letters[word[i]].add(i)
+            elif word[i] in self._solution:
+                moved_letters[word[i]].add(i)
+            else:
+                absent_letters.add(word[i])
+
+        def is_match(word):
+            """
+            Returns True if word might be the solution, given available info.
+            """
+            for i in range(WORD_LEN):
+                for letter, indices in self._correct_letters.items():
+                    for i in indices:
+                        if word[i] != letter:
+                            return False
+                for letter, indices in moved_letters.items():
+                    for i in indices:
+                        if word[i] == letter:
+                            return False
+                for letter in absent_letters:
+                    if letter in word:
+                        return False
+            return True
+        
+        self.words_left = list(filter(is_match, self.words_left))
+        self.progress.append(len(self.words_left))
 
         # Check if the game is over
         self._guesses.append(word)
@@ -91,6 +123,20 @@ class Game:
             Whether the game is won, lost, or in progress.
         """
         return self._status
+
+    def plot_progress(self):
+        """
+        Plots how the list of possible solutions has been narrowed down with
+        each successive guess.
+        """
+        fig = plt.figure()
+        plt.plot(self.progress)
+        fig.gca().xaxis.get_major_locator().set_params(integer=True)
+        plt.xlabel("Guess")
+        plt.ylabel("Words Remaining")
+        fig.savefig("progress.png")
+
+        return self.progress
 
     def _color_guess(self, guess):
         """

@@ -19,3 +19,5 @@ game.guess("adieu")
 game.guess("llama")
 print(game)
 print(game.get_status())
+
+game.plot_progress()

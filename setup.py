@@ -7,4 +7,5 @@ setup(name='pywordle',
       install_requires=[
           "termcolor",
           "enum",
+          "matplotlib",
       ],)
