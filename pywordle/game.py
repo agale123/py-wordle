@@ -14,28 +14,6 @@ class Status(Enum):
     LOST = 3
 
 
-class MovedLetter:
-    """Metadata about a letter that is correct but in the wrong location."""
-
-    def __init__(self, min_count=0, max_count=WORD_LEN, indicies=set()):
-        self.min_count = min_count
-        self.max_count = max_count
-        self.indices = indicies
-
-    def add(self, index):
-        self.indices.add(index)
-
-    def __eq__(self, other):
-        return (
-            self.min_count == other.min_count
-            and self.max_count == other.max_count
-            and self.indices == other.indices)
-
-    def __repr__(self):
-        return "MovedLetter({0}, {1}, {2})".format(
-            self.min_count, self.max_count, self.indices)
-
-
 class Game:
     """Represents an individual game of Wordle."""
 
@@ -48,20 +26,11 @@ class Game:
         self._solution = solution.upper()
         self._hard_mode = hard_mode
 
-        # Set of guessed letters not in the solution.
-        self._absent_letters = set()
-
         # Map from guessed letters to a list of indices.
         self._correct_letters = defaultdict(set)
 
-        # Map from guessed letters to an object containing a set of indices
-        # where the letter isn't and the minimum number of instances.
-        self._moved_letters = defaultdict(
-            lambda: MovedLetter(0, WORD_LEN, set()))
-
         self._status = Status.IN_PROGRESS
         self._guesses = []
-        self._possible_solutions = VALID_WORDS
 
     def guess(self, word):
         """
@@ -85,23 +54,6 @@ class Game:
         for i in range(WORD_LEN):
             if self._solution[i] == word[i]:
                 self._correct_letters[word[i]].add(i)
-            elif word[i] in self._solution:
-                self._moved_letters[word[i]].add(i)
-                # If we learn the maximum number of times a letter appears
-                # then update the max_count
-                if word.count(word[i]) > self._solution.count(word[i]):
-                    self._moved_letters[word[i]].max_count = self._solution.count(
-                        word[i])
-
-                # If we learn the minimum number of times a letter appears
-                # then update the min_count
-                self._moved_letters[word[i]].min_count = max(
-                    self._moved_letters[word[i]].min_count,
-                    min(
-                        word.count(word[i]),
-                        self._solution.count(word[i])))
-            else:
-                self._absent_letters.add(word[i])
 
         # Check if the game is over
         self._guesses.append(word)
@@ -140,46 +92,58 @@ class Game:
         """
         return self._status
 
+    def _color_guess(self, guess):
+        """
+        Returns:
+            A color-coded representation of the guessed word. A letter is white
+            if it is not in the final word, yellow if it is in the wrong
+            location, and green if it is in the correct location.
+        """
+        word = ""
+        for i in range(WORD_LEN):
+            letter = guess[i]
+            if self._solution[i] == letter:
+                # Exact match has a green background.
+                word += colored(letter, "grey", "on_green")
+            elif letter in self._solution:
+                # For inexact matches, we need to color at most the number
+                # of instances in the solution with priority given to exact
+                # matches. Steps to calculate this:
+                # 1. See if we guessed more instances of a letter than the
+                #    solution has.
+                # 2. Find if any of those guesses were an exact match and
+                #    subtract that out from the count of letters to color.
+                # 3. Start from the beginning of the word to color the
+                #    right number of inexact matches.
+                actual_count = self._solution.count(letter)
+                guessed_extra_letters = actual_count < guess.count(letter)
+                solution_indices = {i for i, c in enumerate(
+                    self._solution) if c == letter}
+                guess_indices = {i for i, c in enumerate(guess) if c == letter}
+                exact_match_count = len(
+                    solution_indices.intersection(guess_indices))
+                guess_inexact_indices = list(
+                    guess_indices.difference(solution_indices))
+                not_colored_inexact = i not in guess_inexact_indices[0:max(
+                    actual_count-exact_match_count, 0)]
+
+                if guessed_extra_letters and not_colored_inexact:
+                    word += colored(letter, "grey", "on_white")
+                else:
+                    word += colored(letter, "grey", "on_yellow")
+            else:
+                # Non-match has a white background.
+                word += colored(letter, "grey", "on_white")
+        return word
+
     def __str__(self):
+        """
+        Returns:
+            A string represention of the full game.
+        """
         words = []
         for guess in self._guesses:
-            word = ""
-            for i in range(WORD_LEN):
-                letter = guess[i]
-                if self._solution[i] == letter:
-                    # Exact match has a green background
-                    word += colored(letter, "grey", "on_green")
-                elif letter in self._solution:
-                    # For inexact matches, we need to color at most the number
-                    # of instances in the solution with priority given to exact
-                    # matches. Steps to calculate this:
-                    # 1. See if we guessed more instances of a letter than the
-                    #    solution has.
-                    # 2. Find if any of those guesses were an exact match and
-                    #    subtract that out from the count of letters to color.
-                    # 3. Start from the beginning of the word to color the
-                    #    right number of inexact matches.
-                    actual_count = self._solution.count(letter)
-                    guessed_extra_letters = actual_count < guess.count(letter)
-                    solution_indices = {i for i, c in enumerate(
-                        self._solution) if c == letter}
-                    guess_indices = {
-                        i for i, c in enumerate(guess) if c == letter}
-                    exact_match_count = len(
-                        solution_indices.intersection(guess_indices))
-                    guess_inexact_indices = list(
-                        guess_indices.difference(solution_indices))
-                    not_colored_inexact = i not in guess_inexact_indices[0:max(
-                        actual_count-exact_match_count, 0)]
-
-                    if guessed_extra_letters and not_colored_inexact:
-                        word += colored(letter, "grey", "on_white")
-                    else:
-                        word += colored(letter, "grey", "on_yellow")
-                else:
-                    # Non-match has a white backgroudn
-                    word += colored(letter, "grey", "on_white")
-            words.append(word)
+            words.append(self._color_guess(guess))
         return "\n".join(words)
 
     def __repr__(self):
