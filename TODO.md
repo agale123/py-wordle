@@ -3,7 +3,7 @@
   - [x] Add functional spec
   - [x] Add design spec
   - [x] Add final presentation
-  - [ ] Add final writeup
+  - [x] Add final writeup
   - [x] Flush out README.md
 - Examples
   - [x] Implement simple example
