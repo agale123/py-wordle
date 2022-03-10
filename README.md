@@ -1,5 +1,7 @@
 # pywordle
 
+![test status](https://github.com/agale123/py-wordle/actions/workflows/python-package.yml)
+
 Game Engine for the popular Wordle game.
 
 ## Installing the package
