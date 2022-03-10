@@ -1,6 +1,6 @@
 # pywordle
 
-![test status](https://github.com/agale123/py-wordle/actions/workflows/python-package.yml)
+![test status](https://github.com/agale123/py-wordle/actions/workflows/python-package.yml/badge.svg)
 
 Game Engine for the popular Wordle game.
 
