@@ -1,6 +1,6 @@
-# pywordle
+# PyWordle
 
-![test status](https://github.com/agale123/py-wordle/actions/workflows/python-package.yml/badge.svg)
+![build status](https://github.com/agale123/py-wordle/actions/workflows/python-package.yml/badge.svg)
 
 Game Engine for the popular Wordle game.
 
@@ -25,6 +25,16 @@ wordle = Wordle(WORD_LIST)
 game = wordle.create_game()
 game.guess("SPILL")
 print(str(game))
+```
+
+## Interactive example
+
+An interactive example is provided to demonstrate how this library can be used
+to run a text based version of the classic Wordle game. The following command
+will run this example:
+
+```
+python examples/interactive.py
 ```
 
 ## Package structure
