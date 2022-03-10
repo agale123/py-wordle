@@ -13,7 +13,7 @@ class Status(Enum):
     IN_PROGRESS = 1
     WON = 2
     LOST = 3
-       
+
 
 class Game:
     """Represents an individual game of Wordle."""
@@ -83,7 +83,7 @@ class Game:
                     if letter in word:
                         return False
             return True
-        
+
         self.words_left = list(filter(is_match, self.words_left))
         self.progress.append(len(self.words_left))
 

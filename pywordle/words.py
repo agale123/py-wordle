@@ -10656,7 +10656,7 @@ VALID_WORDS = [
     "ZYGON",
     "ZYMES",
     "ZYMIC",
-        "CIGAR",
+    "CIGAR",
     "REBUT",
     "SISSY",
     "HUMPH",

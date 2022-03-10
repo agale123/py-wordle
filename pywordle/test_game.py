@@ -3,7 +3,6 @@ import unittest
 from termcolor import colored
 
 from game import Game, Status
-from words import VALID_WORDS
 
 
 class TestGame(unittest.TestCase):

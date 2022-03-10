@@ -1,5 +1,5 @@
 from solutions import SOLUTIONS
-from pywordle import Wordle, Game, Status
+from pywordle import Wordle, Status
 
 
 wordle = Wordle(SOLUTIONS)

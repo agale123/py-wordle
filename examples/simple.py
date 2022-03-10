@@ -1,4 +1,4 @@
-from pywordle import Wordle, Game, Status
+from pywordle import Wordle, Status
 
 ANIMALS = [
     "zebra",
@@ -18,6 +18,6 @@ game.guess("hippo")
 game.guess("adieu")
 game.guess("llama")
 print(game)
-print(game.get_status())
+print(game.get_status() == Status.IN_PROGRESS)
 
 game.plot_progress()
