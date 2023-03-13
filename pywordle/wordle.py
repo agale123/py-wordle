@@ -16,11 +16,12 @@ class Wordle:
 
         self.solutions = list(map(lambda x: x.upper(), solutions))
 
-    def start_game(self, hard_mode=False, solution=None):
+    def start_game(self, hard_mode=False, solution=None, max_guesses=None):
         """
         Args:
             hard_mode: True if previous known letters must be used.
             solution: Optionally provide the solution for the game.
+            max_guesses: The number of guesses allowed.
 
         Returns:
             A Game instance.
@@ -30,7 +31,7 @@ class Wordle:
         elif solution not in self.solutions:
             raise Exception("Solution isn't a valid word")
 
-        return Game(solution, hard_mode)
+        return Game(solution, hard_mode, max_guesses)
 
     def __repr__(self):
         return "Wordle({0})".format(self.solutions)

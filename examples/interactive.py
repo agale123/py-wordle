@@ -16,4 +16,4 @@ while game.get_status() == Status.IN_PROGRESS:
 if game.get_status() == Status.WON:
     print("Congrats! You won")
 else:
-    print("Sorry, you lost. Solution was: " + game.solution)
+    print("Sorry, you lost. Solution was: " + game._solution)

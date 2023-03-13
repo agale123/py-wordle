@@ -18,11 +18,12 @@ class Status(Enum):
 class Game:
     """Represents an individual game of Wordle."""
 
-    def __init__(self, solution, hard_mode):
+    def __init__(self, solution, hard_mode, max_guesses):
         """
         Args:
             solution: The answer for the game.
             hard_mode: True if previous known letters must be used.
+            max_guesses: The number of guesses allowed.
         """
         self._solution = solution.upper()
         self._hard_mode = hard_mode
@@ -32,6 +33,7 @@ class Game:
 
         self._status = Status.IN_PROGRESS
         self._guesses = []
+        self._max_guesses = max_guesses or MAX_GUESSES
 
         # Keep track of how many words are left for plotting progress.
         self.words_left = VALID_WORDS
@@ -91,7 +93,7 @@ class Game:
         self._guesses.append(word)
         if self._solution == word:
             self._status = Status.WON
-        elif len(self._guesses) == MAX_GUESSES:
+        elif len(self._guesses) == self._max_guesses:
             self._status = Status.LOST
 
     def is_valid(self, word):
@@ -190,6 +192,9 @@ class Game:
         words = []
         for guess in self._guesses:
             words.append(self._color_guess(guess))
+
+        for i in range(self._max_guesses - len(self._guesses)):
+            words.append(self._color_guess("     "))
         return "\n".join(words)
 
     def __repr__(self):
